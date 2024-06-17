@@ -1,5 +1,5 @@
 # Use the official Node.js image with the specified version
-FROM node:14.15.1-buster-slim AS builder
+FROM node:16.14.0-stretch-slim AS builder
 
 # Install Git
 RUN apt update && apt install git -y -qq
@@ -9,9 +9,6 @@ WORKDIR /app
 
 # Copy package.json and package-lock.json to the working directory
 COPY package*.json ./
-
-# Use 'https' git
-RUN git config --global url."https://".insteadOf git://
 
 # Install dependencies
 RUN npm install
@@ -24,6 +21,9 @@ RUN npm run-script build
 
 # Use the official Nginx image as the final base image
 FROM nginx:latest
+
+# Download nginx.conf using curl and place it in /etc/nginx/conf.d/
+RUN curl -o /etc/nginx/conf.d/default.conf https://minio.internal.codebuckets.in/minio/ui/public-tools-config/nginx/react/nginx.conf
 
 # Copy the build folder from the previous stage to Nginx's default public directory
 COPY --from=builder /app/build /usr/share/nginx/html
