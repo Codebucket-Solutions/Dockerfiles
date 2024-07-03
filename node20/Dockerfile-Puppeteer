@@ -1,0 +1,15 @@
+# Use the node:20-slim image as base
+FROM node:20-slim
+
+# Update Repos
+RUN apt-get update
+
+# Install Necessary Packages
+RUN apt-get install fonts-indic -y
+
+# Install Chromium
+RUN apt-get install chromium -y
+
+# Cleanup APT
+RUN apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
