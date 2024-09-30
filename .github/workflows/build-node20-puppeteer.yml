@@ -1,0 +1,24 @@
+name: Build and Push Docker Image
+
+on:
+  workflow_dispatch:
+
+env:
+  DOCKER_REPO: node20
+  DOCKER_IMAGE: puppeteer
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Log in to Harbor
+        run: echo "${{ secrets.HARBOR_PASSWORD }}" | docker login https://harbor.internal.codebuckets.in -u '${{ secrets.HARBOR_USER }}' --password-stdin
+
+      - name: Build Docker image
+        run: docker build -t harbor.internal.codebuckets.in/${{ env.DOCKER_REPO }}/${{ env.DOCKER_IMAGE }}:latest . -f node20/Dockerfile-Puppeteer
+
+      - name: Push Docker image
+        run: docker push harbor.internal.codebuckets.in/${{ env.DOCKER_REPO }}/${{ env.DOCKER_IMAGE }}:latest
