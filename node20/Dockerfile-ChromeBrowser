@@ -1,0 +1,32 @@
+# Use the node:20-slim image as base
+FROM node:20-slim
+
+# Declare Chrome version as a build argument
+ARG CHROME_VERSION=129.0.6668.89
+
+# Update apt-get
+RUN apt-get update
+
+# Install gnupg2 and curl
+RUN apt-get install gnupg2 curl unzip -y
+
+# Add Google Chrome's official repository
+RUN curl -O https://packages.cloud.google.com/apt/doc/apt-key.gpg && apt-key add apt-key.gpg
+RUN sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
+RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 4EB27DB2A3B88B8B
+
+# Install the specific version of Google Chrome
+RUN apt-get update
+RUN apt-get install google-chrome-stable=$CHROME_VERSION-1 -qq -y
+
+# Download and install the Chromedriver
+RUN curl https://storage.googleapis.com/chrome-for-testing-public/$CHROME_VERSION/linux64/chromedriver-linux64.zip -o chromedriver-linux64.zip
+RUN unzip chromedriver-linux64.zip
+RUN mv chromedriver-linux64/chromedriver /usr/bin/
+
+# Cleanup
+RUN rm -rf chromedriver-linux64
+RUN rm -rf chromedriver-linux64.zip
+RUN apt-get remove gnupg2 curl unzip -y
+RUN apt-get autoremove -y
+RUN rm -rf /var/lib/apt/lists/*
