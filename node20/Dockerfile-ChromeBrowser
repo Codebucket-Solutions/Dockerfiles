@@ -7,8 +7,9 @@ ARG CHROME_VERSION=129.0.6668.89
 # Update apt-get
 RUN apt-get update
 
-# Install gnupg2 and curl
+# Install packages
 RUN apt-get install gnupg2 curl unzip -y
+RUN apt-get install xvfb -y
 
 # Add Google Chrome's official repository
 RUN curl -O https://packages.cloud.google.com/apt/doc/apt-key.gpg && apt-key add apt-key.gpg
