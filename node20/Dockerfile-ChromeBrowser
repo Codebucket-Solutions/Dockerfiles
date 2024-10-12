@@ -2,7 +2,7 @@
 FROM node:20-slim
 
 # Declare Chrome version as a build argument
-ARG CHROME_VERSION=129.0.6668.89
+ARG CHROME_VERSION=129.0.6668.100
 
 # Update apt-get
 RUN apt-get update
