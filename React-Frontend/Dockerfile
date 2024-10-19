@@ -25,6 +25,9 @@ FROM nginx:latest
 # Download nginx.conf using curl and place it in /etc/nginx/conf.d/
 RUN curl -o /etc/nginx/conf.d/default.conf https://minio.internal.codebuckets.in/public-tools-config/nginx/react/nginx.conf
 
+# Empty webroot folder
+RUN rm -rf /usr/share/nginx/html/*
+
 # Copy the build folder from the previous stage to Nginx's default public directory
 COPY --from=builder /app/build /usr/share/nginx/html
 
