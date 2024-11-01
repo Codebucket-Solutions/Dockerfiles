@@ -1,0 +1,28 @@
+name: Build and Push Docker Image
+
+on:
+  workflow_dispatch:
+
+env:
+  DOCKER_REPO: node20
+  DOCKER_IMAGE: slim
+  HASH: sha256:14d0121de85b9625f9c6c827ab68f5c7ffb200758bc8693f7ea619b4946f07a9
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Log in to Harbor
+        run: echo "${{ secrets.HARBOR_PASSWORD }}" | docker login "https://harbor.internal.codebuckets.in" -u "${{ secrets.HARBOR_USER }}" --password-stdin
+
+      - name: Pull Docker Image
+        run: docker pull node:20-bookworm-slim@${HASH}
+
+      - name: Tag Image
+        run: docker tag node:20-bookworm-slim@${HASH} harbor.internal.codebuckets.in/${DOCKER_REPO}/${DOCKER_IMAGE}:latest
+
+      - name: Push Docker image
+        run: docker push harbor.internal.codebuckets.in/${DOCKER_REPO}/${DOCKER_IMAGE}:latest
