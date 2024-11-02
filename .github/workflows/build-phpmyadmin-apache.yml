@@ -1,0 +1,28 @@
+name: Build and Push PhpMyAdmin Aapche
+
+on:
+  workflow_dispatch:
+
+env:
+  DOCKER_REPO: mirror
+  DOCKER_IMAGE: phpmyadmin-apache
+  HASH: sha256:2ec46aba67db196e8a6987440dcd6dde7d15aa8f0435d84c8b8442d2b39f15c7
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Log in to Harbor
+        run: echo "${{ secrets.HARBOR_PASSWORD }}" | docker login https://harbor.internal.codebuckets.in -u '${{ secrets.HARBOR_USER }}' --password-stdin
+
+      - name: Pull Docker Image
+        run: docker pull phpmyadmin:apache@${HASH}
+
+      - name: Tag Image
+        run: docker tag phpmyadmin:apache@${HASH} harbor.internal.codebuckets.in/${DOCKER_REPO}/${DOCKER_IMAGE}:latest
+
+      - name: Push Docker image
+        run: docker push harbor.internal.codebuckets.in/${DOCKER_REPO}/${DOCKER_IMAGE}:latest
