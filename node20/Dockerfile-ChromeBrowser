@@ -2,7 +2,8 @@
 FROM node:20-slim
 
 # Declare Chrome version as a build argument
-ARG CHROME_VERSION=130.0.6723.58
+# https://googlechromelabs.github.io/chrome-for-testing/
+ARG CHROME_VERSION=131.0.6778.69
 
 # Update apt-get
 RUN apt-get update
