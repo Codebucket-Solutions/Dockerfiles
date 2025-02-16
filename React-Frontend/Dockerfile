@@ -1,5 +1,5 @@
 # Use the official Node.js image with the specified version
-FROM node:16.14.0-stretch-slim AS builder
+FROM node:20-slim AS builder
 
 # Install Git
 RUN apt update && apt install git -y -qq
