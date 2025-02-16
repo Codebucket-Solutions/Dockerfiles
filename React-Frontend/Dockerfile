@@ -17,7 +17,7 @@ COPY . .
 RUN npm run-script build
 
 # Use the official Nginx image as the final base image
-FROM nginx:latest
+FROM nginx:stable
 
 # Download nginx.conf using curl and place it in /etc/nginx/conf.d/
 RUN curl -o /etc/nginx/conf.d/default.conf https://minio.internal.codebuckets.in/public-tools-config/nginx/react/nginx.conf
